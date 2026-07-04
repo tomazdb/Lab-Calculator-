@@ -2,119 +2,333 @@
 <html lang="pt-BR">
 
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LabCalc</title>
 
-<meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>LabCalc</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
 <header>
-
-<h1>🧪 LabCalc</h1>
-
-<p>Laboratory Calculator Suite</p>
-
+    <h1>🧪 LabCalc</h1>
+    <p>Laboratory Calculator Suite</p>
 </header>
 
 <nav>
-
-<button onclick="mostrarCalculadora('diluicao')">
-
-Diluições
-
-</button>
-
-<button onclick="mostrarCalculadora('molaridade')">
-
-Molaridade
-
-</button>
-
-<button onclick="mostrarCalculadora('solucoes')">
-
-Preparo de Soluções
-
-</button>
-
-<button onclick="mostrarCalculadora('concentracao')">
-
-Concentração
-
-</button>
-
-<button onclick="mostrarCalculadora('massa')">
-
-Massa & Volume
-
-</button>
-
+    <button onclick="mostrarCalculadora('diluicao')">Diluições</button>
+    <button onclick="mostrarCalculadora('molaridade')">Molaridade</button>
+    <button onclick="mostrarCalculadora('solucoes')">Preparo de Soluções</button>
+    <button onclick="mostrarCalculadora('concentracao')">Concentração</button>
+    <button onclick="mostrarCalculadora('massa-volume')">Massa & Volume</button>
 </nav>
 
 <main>
 
-<section id="diluicao" class="calculadora">
+    <!-- DILUIÇÃO -->
+    <section id="diluicao" class="calculadora">
+        <h2>🧪 Calculadora de Diluições</h2>
+        <p>C₁ × V₁ = C₂ × V₂</p>
+        <p>Deixe vazio apenas o campo que deseja calcular.</p>
 
-<h2>🧪 Calculadora de Diluições</h2>
+        <div class="form-group">
+            <label for="c1">C₁ - Concentração inicial</label>
+            <input type="number" id="c1" step="any" placeholder="Ex.: 10">
+        </div>
 
-<p>C₁ × V₁ = C₂ × V₂</p>
+        <div class="form-group">
+            <label for="v1">V₁ - Volume inicial</label>
+            <input type="number" id="v1" step="any" placeholder="Ex.: 5">
+        </div>
 
-</section>
+        <div class="form-group">
+            <label for="c2">C₂ - Concentração final</label>
+            <input type="number" id="c2" step="any" placeholder="Ex.: 2">
+        </div>
 
-<section id="molaridade" class="calculadora oculta">
+        <div class="form-group">
+            <label for="v2">V₂ - Volume final</label>
+            <input type="number" id="v2" step="any" placeholder="Ex.: 25">
+        </div>
 
-<h2>⚗️ Calculadora de Molaridade</h2>
+        <div class="button-group">
+            <button class="btn-primary" onclick="calcularDiluicao()">Calcular</button>
+            <button class="btn-danger" onclick="limparDiluicao()">Limpar</button>
+            <button class="btn-success" onclick="copiarResultado()">Copiar Resultado</button>
+        </div>
 
-<p>Em desenvolvimento...</p>
+        <div class="resultado">
+            <h3>Resultado</h3>
+            <p id="resultadoDiluicao">Aguardando cálculo...</p>
+        </div>
+    </section>
 
-</section>
+    <!-- MOLARIDADE -->
+    <section id="molaridade" class="calculadora oculta">
+        <h2>⚗️ Calculadora de Molaridade</h2>
+        <p>Calcule a molaridade ou a massa necessária para preparar uma solução.</p>
 
-<section id="solucoes" class="calculadora oculta">
+        <div class="form-group">
+            <label for="modoMolaridade">Escolha o cálculo</label>
+            <select id="modoMolaridade" onchange="alterarModoMolaridade()">
+                <option value="calcularM">Calcular molaridade</option>
+                <option value="calcularMassa">Calcular massa necessária</option>
+            </select>
+        </div>
 
-<h2>🧫 Preparo de Soluções</h2>
+        <div id="blocoMolaridade">
+            <div class="form-group">
+                <label for="molMassa">Massa do soluto (g)</label>
+                <input type="number" id="molMassa" step="any" placeholder="Ex.: 5">
+            </div>
 
-<p>Em desenvolvimento...</p>
+            <div class="form-group">
+                <label for="molMM">Massa molecular (g/mol)</label>
+                <input type="number" id="molMM" step="any" placeholder="Ex.: 58.44">
+            </div>
 
-</section>
+            <div class="form-group">
+                <label for="molVolume">Volume da solução (L)</label>
+                <input type="number" id="molVolume" step="any" placeholder="Ex.: 0.5">
+            </div>
+        </div>
 
-<section id="concentracao" class="calculadora oculta">
+        <div id="blocoMassa" style="display:none;">
+            <div class="form-group">
+                <label for="molMolaridade">Molaridade desejada (M)</label>
+                <input type="number" id="molMolaridade" step="any" placeholder="Ex.: 0.1">
+            </div>
 
-<h2>🧬 Conversor de Concentração</h2>
+            <div class="form-group">
+                <label for="molMM2">Massa molecular (g/mol)</label>
+                <input type="number" id="molMM2" step="any" placeholder="Ex.: 58.44">
+            </div>
 
-<p>Em desenvolvimento...</p>
+            <div class="form-group">
+                <label for="molVolume2">Volume da solução (L)</label>
+                <input type="number" id="molVolume2" step="any" placeholder="Ex.: 0.5">
+            </div>
+        </div>
 
-</section>
+        <div class="button-group">
+            <button class="btn-primary" onclick="calcularMolaridade()">Calcular</button>
+            <button class="btn-danger" onclick="limparMolaridade()">Limpar</button>
+            <button class="btn-success" onclick="copiarResultado()">Copiar Resultado</button>
+        </div>
 
-<section id="massa" class="calculadora oculta">
+        <div class="resultado">
+            <h3>Resultado</h3>
+            <p id="resultadoMolaridade">Aguardando cálculo...</p>
+        </div>
+    </section>
 
-<h2>📏 Conversor de Massa e Volume</h2>
+    <!-- PREPARO DE SOLUÇÕES -->
+    <section id="solucoes" class="calculadora oculta">
+        <h2>🧫 Preparo de Soluções</h2>
+        <p>Calcule massa para preparo a partir de sólido ou volume necessário para diluição.</p>
 
-<p>Em desenvolvimento...</p>
+        <div class="form-group">
+            <label for="modoSolucao">Tipo de preparo</label>
+            <select id="modoSolucao" onchange="alterarModoSolucao()">
+                <option value="po">Preparar a partir de sólido</option>
+                <option value="diluicao">Preparar por diluição</option>
+            </select>
+        </div>
 
-</section>
+        <div id="blocoPo">
+            <div class="form-group">
+                <label for="solMM">Massa molecular (g/mol)</label>
+                <input type="number" id="solMM" step="any" placeholder="Ex.: 58.44">
+            </div>
+
+            <div class="form-group">
+                <label for="solMolaridade">Molaridade desejada (M)</label>
+                <input type="number" id="solMolaridade" step="any" placeholder="Ex.: 0.1">
+            </div>
+
+            <div class="form-group">
+                <label for="solVolume">Volume final (L)</label>
+                <input type="number" id="solVolume" step="any" placeholder="Ex.: 0.5">
+            </div>
+        </div>
+
+        <div id="blocoDiluicao" style="display:none;">
+            <div class="form-group">
+                <label for="estoque">Concentração estoque</label>
+                <input type="number" id="estoque" step="any" placeholder="Ex.: 10">
+            </div>
+
+            <div class="form-group">
+                <label for="final">Concentração final</label>
+                <input type="number" id="final" step="any" placeholder="Ex.: 1">
+            </div>
+
+            <div class="form-group">
+                <label for="volumeFinal">Volume final desejado (mL)</label>
+                <input type="number" id="volumeFinal" step="any" placeholder="Ex.: 100">
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="calcularSolucao()">Calcular</button>
+            <button class="btn-danger" onclick="limparSolucao()">Limpar</button>
+            <button class="btn-success" onclick="copiarResultado()">Copiar Resultado</button>
+        </div>
+
+        <div class="resultado">
+            <h3>Resultado</h3>
+            <p id="resultadoSolucao">Aguardando cálculo...</p>
+        </div>
+    </section>
+
+    <!-- CONCENTRAÇÃO -->
+    <section id="concentracao" class="calculadora oculta">
+        <h2>🧬 Conversor de Concentração</h2>
+
+        <div class="form-group">
+            <label for="concValor">Valor</label>
+            <input type="number" id="concValor" step="any" placeholder="Ex.: 1">
+        </div>
+
+        <div class="form-group">
+            <label for="concOrigem">De</label>
+            <select id="concOrigem">
+                <option value="M">M</option>
+                <option value="mM">mM</option>
+                <option value="µM">µM</option>
+                <option value="nM">nM</option>
+                <option value="pM">pM</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="concDestino">Para</label>
+            <select id="concDestino">
+                <option value="M">M</option>
+                <option value="mM">mM</option>
+                <option value="µM">µM</option>
+                <option value="nM">nM</option>
+                <option value="pM">pM</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="converterConcentracao()">Converter</button>
+            <button class="btn-danger" onclick="limparConversores()">Limpar</button>
+            <button class="btn-success" onclick="copiarResultado()">Copiar Resultado</button>
+        </div>
+
+        <div class="resultado">
+            <h3>Resultado</h3>
+            <p id="resultadoConcentracao">Aguardando cálculo...</p>
+        </div>
+    </section>
+
+    <!-- MASSA E VOLUME -->
+    <section id="massa-volume" class="calculadora oculta">
+        <h2>📏 Conversor de Massa e Volume</h2>
+
+        <h3>Massa</h3>
+
+        <div class="form-group">
+            <label for="massaValor">Valor</label>
+            <input type="number" id="massaValor" step="any" placeholder="Ex.: 1000">
+        </div>
+
+        <div class="form-group">
+            <label for="massaOrigem">De</label>
+            <select id="massaOrigem">
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="mg">mg</option>
+                <option value="µg">µg</option>
+                <option value="ng">ng</option>
+                <option value="pg">pg</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="massaDestino">Para</label>
+            <select id="massaDestino">
+                <option value="kg">kg</option>
+                <option value="g">g</option>
+                <option value="mg">mg</option>
+                <option value="µg">µg</option>
+                <option value="ng">ng</option>
+                <option value="pg">pg</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="converterMassa()">Converter Massa</button>
+        </div>
+
+        <div class="resultado">
+            <h3>Resultado da Massa</h3>
+            <p id="resultadoMassa">Aguardando cálculo...</p>
+        </div>
+
+        <br>
+
+        <h3>Volume</h3>
+
+        <div class="form-group">
+            <label for="volumeValor">Valor</label>
+            <input type="number" id="volumeValor" step="any" placeholder="Ex.: 1000">
+        </div>
+
+        <div class="form-group">
+            <label for="volumeOrigem">De</label>
+            <select id="volumeOrigem">
+                <option value="L">L</option>
+                <option value="mL">mL</option>
+                <option value="µL">µL</option>
+                <option value="nL">nL</option>
+                <option value="pL">pL</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="volumeDestino">Para</label>
+            <select id="volumeDestino">
+                <option value="L">L</option>
+                <option value="mL">mL</option>
+                <option value="µL">µL</option>
+                <option value="nL">nL</option>
+                <option value="pL">pL</option>
+            </select>
+        </div>
+
+        <div class="button-group">
+            <button class="btn-primary" onclick="converterVolume()">Converter Volume</button>
+            <button class="btn-danger" onclick="limparConversores()">Limpar Conversores</button>
+            <button class="btn-success" onclick="copiarResultado()">Copiar Resultado</button>
+        </div>
+
+        <div class="resultado">
+            <h3>Resultado do Volume</h3>
+            <p id="resultadoVolume">Aguardando cálculo...</p>
+        </div>
+    </section>
 
 </main>
 
 <footer>
-
-Desenvolvido por Débora Borges • LabCalc v1.0
-
+    Desenvolvido por Débora Borges • LabCalc v1.0
 </footer>
 
-<script src="script.js"></script>
+<script src="utils.js"></script>
+<script src="ui.js"></script>
+<script src="dilution.js"></script>
+<script src="molarity.js"></script>
+<script src="solution.js"></script>
+<script src="converter.js"></script>
+<script src="app.js"></script>
 
 </body>
-
 </html>
