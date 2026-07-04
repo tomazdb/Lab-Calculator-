@@ -1,182 +1,63 @@
-/* ==========================================================
-   CALCULADORA DE MOLARIDADE
-========================================================== */
+function calcularMolaridade() {
+    const modo = document.getElementById("modoMolaridade").value;
+    const resultado = document.getElementById("resultadoMolaridade");
 
-function calcularMolaridade(){
+    if (modo === "calcularM") {
+        const massa = parseFloat(document.getElementById("molMassa").value);
+        const mm = parseFloat(document.getElementById("molMM").value);
+        const volume = parseFloat(document.getElementById("molVolume").value);
 
-    const modo =
-    document.getElementById("modoMolaridade").value;
-
-    const resultado =
-    document.getElementById("resultadoMolaridade");
-
-    if(modo==="calcularM"){
-
-        const massa =
-        parseFloat(document.getElementById("massa").value);
-
-        const mm =
-        parseFloat(document.getElementById("massaMolecular").value);
-
-        const volume =
-        parseFloat(document.getElementById("volume").value);
-
-        if(
-            isNaN(massa) ||
-            isNaN(mm) ||
-            isNaN(volume)
-        ){
-
-            alert("Preencha todos os campos.");
-
+        if (!valorPositivo(massa) || !valorPositivo(mm) || !valorPositivo(volume)) {
+            alert("Preencha todos os campos com valores maiores que zero.");
             return;
-
         }
 
-        if(
-            massa<=0 ||
-            mm<=0 ||
-            volume<=0
-        ){
+        const molaridade = massa / (mm * volume);
+        const texto = `Molaridade = ${molaridade.toFixed(6)} M`;
 
-            alert("Valores devem ser maiores que zero.");
+        resultado.innerHTML = texto;
+        definirResultado(texto);
+    } else {
+        const M = parseFloat(document.getElementById("molMolaridade").value);
+        const MM = parseFloat(document.getElementById("molMM2").value);
+        const V = parseFloat(document.getElementById("molVolume2").value);
 
+        if (!valorPositivo(M) || !valorPositivo(MM) || !valorPositivo(V)) {
+            alert("Preencha todos os campos com valores maiores que zero.");
             return;
-
         }
 
-        const molaridade =
-        massa/(mm*volume);
+        const massa = M * MM * V;
+        const texto = `Massa necessária = ${massa.toFixed(6)} g`;
 
-        resultadoAtual =
-        molaridade.toFixed(6)+" M";
-
-        resultado.innerHTML=
-        "<strong>Molaridade:</strong> "
-        +resultadoAtual;
-
+        resultado.innerHTML = texto;
+        definirResultado(texto);
     }
-
-    else{
-
-        const M =
-        parseFloat(document.getElementById("molaridade").value);
-
-        const MM =
-        parseFloat(document.getElementById("massaMolecular2").value);
-
-        const V =
-        parseFloat(document.getElementById("volume2").value);
-
-        if(
-            isNaN(M) ||
-            isNaN(MM) ||
-            isNaN(V)
-        ){
-
-            alert("Preencha todos os campos.");
-
-            return;
-
-        }
-
-        if(
-            M<=0 ||
-            MM<=0 ||
-            V<=0
-        ){
-
-            alert("Valores devem ser maiores que zero.");
-
-            return;
-
-        }
-
-        const massa =
-        M*MM*V;
-
-        resultadoAtual =
-        massa.toFixed(6)+" g";
-
-        resultado.innerHTML=
-        "<strong>Massa necessária:</strong> "
-        +resultadoAtual;
-
-    }
-
 }
 
-/* ==========================================================
-   ALTERAR MODO
-========================================================== */
+function alterarModoMolaridade() {
+    const modo = document.getElementById("modoMolaridade").value;
 
-function alterarModoMolaridade(){
+    document.getElementById("blocoMolaridade").style.display = "none";
+    document.getElementById("blocoMassa").style.display = "none";
 
-    const modo =
-    document.getElementById("modoMolaridade").value;
-
-    document.getElementById("blocoMolaridade")
-    .style.display="none";
-
-    document.getElementById("blocoMassa")
-    .style.display="none";
-
-    if(modo==="calcularM"){
-
-        document.getElementById("blocoMolaridade")
-        .style.display="block";
-
+    if (modo === "calcularM") {
+        document.getElementById("blocoMolaridade").style.display = "block";
+    } else {
+        document.getElementById("blocoMassa").style.display = "block";
     }
-
-    else{
-
-        document.getElementById("blocoMassa")
-        .style.display="block";
-
-    }
-
 }
 
-/* ==========================================================
-   LIMPAR MOLARIDADE
-========================================================== */
+function limparMolaridade() {
+    limparCampos([
+        "molMassa",
+        "molMM",
+        "molVolume",
+        "molMolaridade",
+        "molMM2",
+        "molVolume2"
+    ]);
 
-function limparMolaridade(){
-
-    const campos=[
-
-        "massa",
-
-        "massaMolecular",
-
-        "volume",
-
-        "molaridade",
-
-        "massaMolecular2",
-
-        "volume2"
-
-    ];
-
-    campos.forEach(id=>{
-
-        const campo=document.getElementById(id);
-
-        if(campo){
-
-            campo.value="";
-
-        }
-
-    });
-
-    resultadoAtual="";
-
-    document.getElementById(
-        "resultadoMolaridade"
-    ).innerHTML="Aguardando cálculo...";
-
+    document.getElementById("resultadoMolaridade").innerHTML = "Aguardando cálculo...";
+    definirResultado("");
 }
-
-copiarResultado()
